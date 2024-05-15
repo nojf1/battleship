@@ -30,7 +30,7 @@ public class GameBoard {
             System.out.print(i + " "); // Row headers
             for (int j = 0; j < BOARD_SIZE; j++) { // increment j when j is less than BOARD_SIZE
                 if (board[i][j] == '1') { // if the cell is equal to 1, print the player's ship
-                    System.out.print("@ "); //prints players ship as @ to hide ship location
+                    System.out.print("@ "); //prints players ship as @ to hide ship location, extra whitespace for formatting
                 } else {
                     System.out.print(board[i][j] + " "); // prints the board with spaces between each cell
                 }
@@ -42,6 +42,7 @@ public class GameBoard {
 
     // method to place ships on the board
     public void placeShips(char[][] board) {
+        @SuppressWarnings("resource") // suppresses the warning for scanner not closed because the warning is annoying to look at
         Scanner scanner = new Scanner(System.in); // scanner object to get user input
         System.out.println("Place your " + SHIPS + " ships:"); // prints the number of ships the player has to place
 
