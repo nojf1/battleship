@@ -37,9 +37,6 @@ public class GameController {
 
     public GameController() {
         // Constructor for the GameController class
-        playerBoard = new GameBoard(); // Create a new GameBoard object for the player
-        computerBoard = new GameBoard(); // Create a new GameBoard object for the computer
-
     }
 
     // method to start the game
@@ -62,7 +59,7 @@ public class GameController {
         playerBoard.placeShips(playerBoard.board);
 
         // Place the computer's ships, not printed for player
-        computerBoard.placeComputerShips(computerBoard.board);
+        computerBoard.placeComputerShips(computerBoard.board, playerBoard.board);
 
         // Print the board with the ships placed
         System.out.println("\nYour board after ship placement:");

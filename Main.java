@@ -27,5 +27,8 @@ public class Main {
  * Added player ship placement and input validation
  * Added computer ship placement
  * Added game loop in GameController class
+ * Added game over conditions
+ * Added computer AI
+ * Debugged almost everything I can find
  * 
  */
