@@ -57,6 +57,23 @@ public class GameBoard {
         }
     }
 
+    //method to place computer ships
+    public void placeComputerShips(char[][] board) {
+        System.out.println("\nComputer is placing ships...");
+        for (int i = 1; i <= SHIPS;) { //for loop to place ships until i is equal to SHIPS
+            int x = (int) (Math.random() * BOARD_SIZE); //random x coordinate
+            int y = (int) (Math.random() * BOARD_SIZE); //random y coordinate
+
+            // check if the position is not already taken
+            if (board[x][y] == '~') {
+                board[x][y] = '2'; // place the computer's ship
+                System.out.println("\nComputer has placed ship " + i + ".");
+                i++; // only increment if the ship is successfully placed
+            }
+        }
+        System.out.println("\nComputer has placed all its ships.");
+    }
+
 
 
 }
