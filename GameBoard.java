@@ -74,7 +74,7 @@ public class GameBoard {
             int y = (int) (Math.random() * BOARD_SIZE); // random y coordinate
 
             // check if the position is not already taken
-            if (board[x][y] == '~') {
+            if (board[x][y] == '~' || board[x][y] == '1') {
                 board[x][y] = '2'; // place the computer's ship
                 System.out.println("Computer has placed ship " + i + ".");
                 i++; // only increment if the ship is successfully placed
