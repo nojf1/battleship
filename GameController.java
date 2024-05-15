@@ -9,14 +9,13 @@ public class GameController {
 
     // field to store the player's board
     // initialised in the constructor
-    // accessed through playerBoard/computerBoard object instance created in
-    // Main.java
     private GameBoard playerBoard;
     private GameBoard computerBoard;
 
     Random random = new Random();
     Scanner scanner = new Scanner(System.in);
 
+    private boolean gameOver = false; // Boolean to keep track of the game state
     private int playerScore = 0; // Score to keep track of player's hits
     private int computerScore = 0; // Score to keep track of computer's hits
     private int playerShips = 5; // Max starting number of player's ships
@@ -33,7 +32,7 @@ public class GameController {
     private Turn currentTurn = Turn.PLAYER; // Start with player's turn
 
     private Set<String> chosenCoordinates = new HashSet<>(); // data structure set to store computer's chosen
-                                                             // coordinates
+                                                             // xy coordinates to prevent duplicate shots
 
     public GameController() {
         // Constructor for the GameController class
@@ -47,10 +46,10 @@ public class GameController {
         computerBoard = new GameBoard();
 
         // Welcome message
-        System.out.println("\n " + "Welcome to Battleship!");
+        System.out.println("\nWelcome to Battleship!");
 
         // Message to show the player's board
-        System.out.println("\n " + "This is your board, place up to 5 ships to begin the game.\n");
+        System.out.println("\nThis is your board, place up to 5 ships to begin the game.\n");
 
         // Initialise and print initial board
         playerBoard.printBoard(playerBoard.board);
@@ -70,20 +69,20 @@ public class GameController {
         computerBoard.printBoard(computerBoard.board); // must show 2s
 
         // run the game
-        runGame(false);
+        runGame();
 
     }
 
     // method to run the game
-    private boolean runGame(boolean gameOver) {
+    private void runGame() {
         // while loop to keep the game running until the game is over
         while (gameOver == false) {
             if (playerShips == 0) {
-                System.out.println("\n " + "You've lost all your ships! Game over!");
+                System.out.println("\nYou've lost all your ships! Game over!");
                 gameOver = true;
                 break;
             } else if (computerShips == 0) {
-                System.out.println("\n " + "You've sunk all the computer's ships! You win!");
+                System.out.println("\nYou've sunk all the computer's ships! You win!");
                 gameOver = true;
                 break;
             }
@@ -94,57 +93,51 @@ public class GameController {
                 break;
             }
         }
-        System.out.println("\n " + "Player's score: " + playerScore + 
-        " | Computer's score: " + computerScore + "\nGame over!");
-        System.out.println("\n " + "Do you want to play again? (Type Yes or No)");
-        String playAgain = scanner.nextLine();
-        if (playAgain.equalsIgnoreCase("yes")) {
-            startGame();
-        } else {
-            System.out.println("\n " + "Thanks for playing!");
-        }
-        return gameOver;
+        System.out.println("\nPlayer's score: " + playerScore +
+                " | Computer's score: " + computerScore + "\n\nGame over!");
+        restartGame();
+        
     }
 
     public void gameTurn() {
 
         // Player's turn
         if (currentTurn == Turn.PLAYER) {
-            System.out.println("\n" + "Enter coordinates to fire at (x, y):"); // Prompt player for coordinates
+            System.out.println("\nEnter coordinates to fire at (x, y):"); // Prompt player for coordinates
             String inputString = scanner.nextLine(); // Read input from player
             String[] splitCoordinates = inputString.split(","); // Split the input by comma
             int x, y = 0; // Initialize x and y to 0
 
             try {
                 x = Integer.parseInt(splitCoordinates[1].trim()); // Trim to remove any leading or trailing spaces
-                y = Integer.parseInt(splitCoordinates[0].trim());
+                y = Integer.parseInt(splitCoordinates[0].trim()); // to prevent NumberFormatException
 
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { // Catch exceptions for invalid input
                                                                                  // format, e.g. "a,b"
-                System.out.println("\n" + "Invalid input format. Please enter coordinates as x,y."); // Error message
+                System.out.println("\nInvalid input format. Please enter coordinates as x,y."); // Error message
                 return; // Exit the method
             }
 
             // Check if the position is already taken
             if (playerBoard.board[x][y] == playerHit || playerBoard.board[x][y] == computerHit) {
-                System.out.println("\n" + "You've already shot here. Take another shot somewhere else.");
+                System.out.println("\nYou've already shot here. Take another shot somewhere else.");
                 return; // Exit the method
             }
 
             // if the position is a ship ('1' for player's ship, '2' for computer's ship)
             if (playerBoard.board[x][y] == '1') {
-                System.out.println("\n" + "You sunk your own ship! Why did you do that? You lost a ship!");
+                System.out.println("\nYou sunk your own ship! Why did you do that? You lost a ship!");
                 playerBoard.board[x][y] = playerHit; // Mark player's ship as hit
                 playerScore--; // Decrement player's score since they hit their own ship
                 playerShips--; // Decrement player's ships
             } else if (computerBoard.board[x][y] == '2') {
-                System.out.println("\n" + "You sunk the computer's ship! Computer lost a ship!");
+                System.out.println("\nYou sunk the computer's ship! Computer lost a ship!");
                 playerBoard.board[x][y] = computerHit; // Mark computer's ship as hit
                 computerScore--; // Decrement computer's score since player hit their ship
                 playerScore++; // Increment player's score since they hit the computer's ship
                 computerShips--; // Decrement computer's ships
             } else {
-                System.out.println("\n" + "You missed! You're a terrible shot!");
+                System.out.println("\nYou missed! You're a terrible shot!");
                 playerBoard.board[x][y] = miss; // Mark as miss
             }
 
@@ -172,19 +165,22 @@ public class GameController {
 
             // if the position is a ship ('1' for player's ship, '2' for computer's ship)
             if (computerBoard.board[x][y] == '2') {
-                System.out.println("\n" + "Computer sunk its own ship! Computer lost a ship!");
+                System.out.println("\nComputer sunk its own ship! Computer lost a ship!");
                 computerBoard.board[x][y] = computerHit; // Mark computer's ship as hit
+                playerBoard.board[x][y] = computerHit; // Mark player's board computer's ship as hit
                 computerScore--; // Decrement computer's score since they hit their own ship
                 computerShips--; // Decrement computer's ships
             } else if (playerBoard.board[x][y] == '1') {
-                System.out.println("\n" + "Computer sunk your ship! You lost a ship!");
+                System.out.println("\nComputer sunk your ship! You lost a ship!");
                 computerBoard.board[x][y] = playerHit; // Mark player's ship as hit
+                playerBoard.board[x][y] = playerHit; // Mark player's board player's ship as hit
                 playerScore--; // Decrement player's score since computer hit their ship
                 computerScore++; // Increment computer's score since they hit the player's ship
                 playerShips--; // Decrement player's ships
             } else {
-                System.out.println("\n" + "Computer missed! It's a terrible shot!");
+                System.out.println("\nComputer missed! It's a terrible shot!");
                 computerBoard.board[x][y] = miss; // Mark as miss
+                playerBoard.board[x][y] = miss; // Mark player's board as miss
             }
             System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left");
             playerBoard.printBoard(playerBoard.board); // Print the updated board
@@ -194,4 +190,25 @@ public class GameController {
 
     }
 
+    public void restartGame () {
+        System.out.println("\n" + "Do you want to play again? (Type Yes or No)");
+        String playAgain = scanner.nextLine();
+        if (playAgain.equalsIgnoreCase("yes") || playAgain.equalsIgnoreCase("y")) {
+            
+            playerShips = 5; // Reset player's ships so they can place them again
+            computerShips = 5; // Reset computer's ships so they can be placed again
+            playerScore = 0; // Reset player's score
+            computerScore = 0; // Reset computer's score
+            chosenCoordinates.clear(); // Clear the set of computer's previously chosen coordinates
+            gameOver = false ; // Reset game over condition
+            // all of this is to clear existing game data and start a new game
+            startGame(); // start a new game by calling the startGame method
+        } else if (playAgain.equalsIgnoreCase("no") || playAgain.equalsIgnoreCase("n")){
+            gameOver = true; // set game over condition to true
+            System.out.println("\n" + "Thanks for playing!");
+        } else {
+            System.out.println("\n" + "Invalid input. Please type Yes or No.");
+            restartGame(); // repeatedly call the method until valid input is given
+        }
+    }
 }
