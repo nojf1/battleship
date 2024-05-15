@@ -56,8 +56,9 @@ public class GameBoard {
             // if x is greater than or equal to 0 and less than BOARD_SIZE and y is greater
             // than
             // or equal to 0 and less than BOARD_SIZE and the position is not already taken
-            if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE && board[x][y] == '~') {
-                board[x][y] = '1'; // place the player's ship
+            // x and y are inverted because of the way the board is printed
+            if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE && board[y][x] == '~') {
+                board[y][x] = '1'; // place the player's ship
                 i++; // only increment if the ship is successfully placed
             } else { // error message
                 System.out.println("Invalid coordinates or position already taken. Try again.");
