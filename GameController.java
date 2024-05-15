@@ -16,10 +16,12 @@ public class GameController {
     Scanner scanner = new Scanner(System.in);
 
     private boolean gameOver = false; // Boolean to keep track of the game state
-    private int playerScore = 0; // Score to keep track of player's hits
-    private int computerScore = 0; // Score to keep track of computer's hits
+    private int turnsTaken = 0; // Number of turns taken in the game
     private int playerShips = 5; // Max starting number of player's ships
     private int computerShips = 5; // Max starting number of computer's ships
+
+    private int playerScore = 0; // Score to keep track of player's hits
+    private int computerScore = 0; // Score to keep track of computer's hits
 
     private char playerHit = 'X'; // Character to represent a hit on player's board
     private char computerHit = '!'; // Character to represent a hit on computer's board
@@ -93,10 +95,16 @@ public class GameController {
                 break;
             }
         }
-        System.out.println("\nPlayer's score: " + playerScore +
-                " | Computer's score: " + computerScore + "\n\nGame over!");
+
+        // Print the final scores and number of turns taken
+        playerScore = Math.max(0, playerScore); // Ensure player's score is not negative
+        computerScore = Math.max(0, computerScore); // Ensure computer's score is not negative
+        System.out.println("\nPlayer's score: " + playerScore + " | Computer's score: " + computerScore);
+        System.out.println("\nTotal turns taken: " + turnsTaken);
+        System.out.println("\nGame over!");
+        // Ask the player if they want to play again
         restartGame();
-        
+
     }
 
     public void gameTurn() {
@@ -141,7 +149,7 @@ public class GameController {
                 playerBoard.board[x][y] = miss; // Mark as miss
             }
 
-            System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left");
+            System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left\n");
             playerBoard.printBoard(playerBoard.board); // Print the updated board
             currentTurn = Turn.COMPUTER; // Switch to computer's turn
         }
@@ -182,32 +190,35 @@ public class GameController {
                 computerBoard.board[x][y] = miss; // Mark as miss
                 playerBoard.board[x][y] = miss; // Mark player's board as miss
             }
-            System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left");
+            System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left\n");
             playerBoard.printBoard(playerBoard.board); // Print the updated board
+            turnsTaken++; // Increment the number of turns taken
+            System.out.println("Turn: " + turnsTaken + "\n");
             currentTurn = Turn.PLAYER; // Switch to player's turn
 
         }
 
     }
 
-    public void restartGame () {
-        System.out.println("\n" + "Do you want to play again? (Type Yes or No)");
+    public void restartGame() {
+        System.out.println("\nDo you want to play again? (Type Yes or No)");
         String playAgain = scanner.nextLine();
         if (playAgain.equalsIgnoreCase("yes") || playAgain.equalsIgnoreCase("y")) {
-            
+
             playerShips = 5; // Reset player's ships so they can place them again
             computerShips = 5; // Reset computer's ships so they can be placed again
             playerScore = 0; // Reset player's score
             computerScore = 0; // Reset computer's score
+            turnsTaken = 0; // Reset number of turns taken
             chosenCoordinates.clear(); // Clear the set of computer's previously chosen coordinates
-            gameOver = false ; // Reset game over condition
+            gameOver = false; // Reset game over condition
             // all of this is to clear existing game data and start a new game
             startGame(); // start a new game by calling the startGame method
-        } else if (playAgain.equalsIgnoreCase("no") || playAgain.equalsIgnoreCase("n")){
+        } else if (playAgain.equalsIgnoreCase("no") || playAgain.equalsIgnoreCase("n")) {
             gameOver = true; // set game over condition to true
-            System.out.println("\n" + "Thanks for playing!");
+            System.out.println("\nThanks for playing!");
         } else {
-            System.out.println("\n" + "Invalid input. Please type Yes or No.");
+            System.out.println("\nInvalid input. Please type Yes or No.");
             restartGame(); // repeatedly call the method until valid input is given
         }
     }

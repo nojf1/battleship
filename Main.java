@@ -30,5 +30,9 @@ public class Main {
  * Added game over conditions
  * Added computer AI
  * Debugged almost everything I can find
+ * Added scoring system, might reconsider later to get rid of negative scores
+ * Added game restart function
+ * Added turn counter
+ * 
  * 
  */

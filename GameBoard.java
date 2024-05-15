@@ -46,10 +46,20 @@ public class GameBoard {
         Scanner scanner = new Scanner(System.in); // scanner object to get user input
         
         for (int i = 1; i <= SHIPS;) { // for loop to place ships until i is equal to SHIPS
-            System.out.print("\n" + "Enter X coordinate for ship " + i + ": "); // prompts user to enter x coordinate
-            int x = scanner.nextInt(); // stores the x coordinate
-            System.out.print("\n" + "Enter Y coordinate for ship " + i + ": "); // prompts user to enter y coordinate
-            int y = scanner.nextInt(); // stores the y coordinate
+            System.out.println("\nEnter coordinates to place ship " + i + " at (x, y):"); // Prompt player for coordinates
+            String inputString = scanner.nextLine(); // Read input from player
+            String[] splitCoordinates = inputString.split(","); // Split the input by comma
+            int x, y = 0; // Initialize x and y to 0
+
+            try {
+                x = Integer.parseInt(splitCoordinates[0].trim()); // Trim to remove any leading or trailing spaces
+                y = Integer.parseInt(splitCoordinates[1].trim()); // to prevent NumberFormatException
+
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { // Catch exceptions for invalid input
+                                                                                 // format, e.g. "a,b"
+                System.out.println("\nInvalid input format. Please enter coordinates as x,y."); // Error message
+                return; // Exit the method
+            }
 
             // check if coordinates are within bounds and the position is not already taken
             // if x is greater than or equal to 0 and less than BOARD_SIZE and y is greater
