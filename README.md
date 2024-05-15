@@ -1,2 +1,2 @@
 # battleship
-Battleship game made with java
+Battleship game made with java as part of my university assignment.

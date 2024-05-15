@@ -40,4 +40,5 @@ public class Main {
  * 
  * 15/5/2024
  * Added player ship placement and input validation
+ * Added computer ship placement
  */
