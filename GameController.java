@@ -98,7 +98,7 @@ public class GameController {
             }
         }
         System.out
-                .println("Player's score:   | " + playerScore + " Computer's score: " + computerScore + "\nGame over!");
+                .println("Player's score: " + playerScore + " | Computer's score: " + computerScore + "\nGame over!");
         return gameOver;
     }
 
@@ -112,8 +112,8 @@ public class GameController {
             int x, y = 0; // Initialize x and y to 0
 
             try {
-                x = Integer.parseInt(splitCoordinates[0].trim()); // Trim to remove any leading or trailing spaces
-                y = Integer.parseInt(splitCoordinates[1].trim());
+                x = Integer.parseInt(splitCoordinates[1].trim()); // Trim to remove any leading or trailing spaces
+                y = Integer.parseInt(splitCoordinates[0].trim());
 
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { // Catch exceptions for invalid input
                                                                                  // format, e.g. "a,b"
