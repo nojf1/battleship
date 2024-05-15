@@ -44,12 +44,11 @@ public class GameBoard {
     public void placeShips(char[][] board) {
         @SuppressWarnings("resource") // suppresses the warning for scanner not closed because the warning is annoying to look at
         Scanner scanner = new Scanner(System.in); // scanner object to get user input
-        System.out.println("Place your " + SHIPS + " ships:"); // prints the number of ships the player has to place
-
+        
         for (int i = 1; i <= SHIPS;) { // for loop to place ships until i is equal to SHIPS
-            System.out.print("Enter X coordinate for ship " + i + ": "); // prompts user to enter x coordinate
+            System.out.print("\n" + "Enter X coordinate for ship " + i + ": "); // prompts user to enter x coordinate
             int x = scanner.nextInt(); // stores the x coordinate
-            System.out.print("Enter Y coordinate for ship " + i + ": "); // prompts user to enter y coordinate
+            System.out.print("\n" + "Enter Y coordinate for ship " + i + ": "); // prompts user to enter y coordinate
             int y = scanner.nextInt(); // stores the y coordinate
 
             // check if coordinates are within bounds and the position is not already taken
