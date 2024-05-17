@@ -12,7 +12,7 @@ public class GameBoard {
     public GameBoard() {
         this.board = new char[BOARD_SIZE][BOARD_SIZE]; // Initialize the board array
         for (int i = 0; i < BOARD_SIZE; i++) { // for loop to iterate through the board
-            for (int j = 0; j < BOARD_SIZE; j++) { 
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 this.board[i][j] = '~'; // Fill each cell with '~' so it looks like the sea ~ ~ ~ water
             }
         }
@@ -30,7 +30,8 @@ public class GameBoard {
             System.out.print(i + " "); // Row headers
             for (int j = 0; j < BOARD_SIZE; j++) { // increment j when j is less than BOARD_SIZE
                 if (board[i][j] == '1') { // if the cell is equal to 1, print the player's ship
-                    System.out.print("@ "); //prints players ship as @ to hide ship location, extra whitespace for formatting
+                    System.out.print("@ "); // prints players ship as @ to hide ship location, extra whitespace for
+                                            // formatting
                 } else {
                     System.out.print(board[i][j] + " "); // prints the board with spaces between each cell
                 }
@@ -42,32 +43,39 @@ public class GameBoard {
 
     // method to place ships on the board
     public void placeShips(char[][] board) {
-        @SuppressWarnings("resource") // suppresses the warning for scanner not closed because the warning is annoying to look at
+        @SuppressWarnings("resource") // suppresses the warning for scanner not closed
         Scanner scanner = new Scanner(System.in); // scanner object to get user input
-        
+
         for (int i = 1; i <= SHIPS;) { // for loop to place ships until i is equal to SHIPS
-            System.out.println("\nEnter coordinates to place ship " + i + " at (x, y):"); // Prompt player for coordinates, i is the ship number
-            String inputString = scanner.nextLine(); // Read input from player as string and store in inputString, e.g. "0,0"
-            String[] splitCoordinates = inputString.split(","); // Split the input by comma using a string array and split method to get x and y coordinates
-            int x, y = 0; // Initialize x and y to 0
+            boolean validInput = false; // reset validInput to false at the start of each ship placement attempt
+            while (!validInput) { // while input is not valid
+                System.out.println("\nEnter coordinates to place ship " + i + " at (x, y):"); // Prompt player for
+                                                                                              // coordinates
+                String inputString = scanner.nextLine(); // Read input from player
+                String[] splitCoordinates = inputString.split(","); // Split the input by comma
+                int x = 0, y = 0; // Initialize x and y
 
-            try {
-                x = Integer.parseInt(splitCoordinates[0].trim()); // Trim to remove any leading or trailing spaces
-                y = Integer.parseInt(splitCoordinates[1].trim()); // to prevent NumberFormatException
+                try {
+                    x = Integer.parseInt(splitCoordinates[0].trim()); // Parse x from input
+                    y = Integer.parseInt(splitCoordinates[1].trim()); // Parse y from input
+                    validInput = true; // Input is valid, proceed with placement
 
-            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { // Catch exceptions for invalid input
-                                                                                 // format, e.g. "a,b"
-                System.out.println("\nInvalid input format. Please enter coordinates as x,y."); // Error message
-                return; // Exit the method
-            }
+                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { // Catch exceptions for invalid
+                                                                                     // input
+                    System.out.println("\nInvalid input format. Please enter coordinates as x,y."); // Error message
+                    // loop to continue for another input attempt
+                }
 
-            // check if coordinates are within bounds and the position is not already taken
-            // x and y are inverted because of the way the board is printed
-            if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE && board[y][x] == '~') {
-                board[y][x] = '1'; // place the player's ship
-                i++; // only increment if the ship is successfully placed
-            } else { // error message
-                System.out.println("Invalid coordinates or position already taken. Try again.");
+                if (validInput) { // Proceed only if input is valid
+                    // Check if coordinates are within bounds and the position is not already taken
+                    if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE && board[y][x] != '1') {
+                        board[y][x] = '1'; // Place the player's ship
+                        i++; // Only increment if the ship is successfully placed
+                    } else { // Invalid coordinates or position already taken
+                        System.out.println("Invalid coordinates or position already taken. Try again.");
+                        validInput = false; // Ensure the loop prompts for input again
+                    }
+                }
             }
         }
     }
