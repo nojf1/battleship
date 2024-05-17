@@ -11,9 +11,9 @@ public class GameBoard {
     // constructor for the GameBoard class
     public GameBoard() {
         this.board = new char[BOARD_SIZE][BOARD_SIZE]; // Initialize the board array
-        for (int i = 0; i < BOARD_SIZE; i++) { // increment i when i is less than BOARD_SIZE for x coordinate
-            for (int j = 0; j < BOARD_SIZE; j++) { // increment j when j is less than BOARD_SIZE for y coordinate
-                this.board[i][j] = '~'; // Fill each cell with '~' so it looks like the sea
+        for (int i = 0; i < BOARD_SIZE; i++) { // for loop to iterate through the board
+            for (int j = 0; j < BOARD_SIZE; j++) { 
+                this.board[i][j] = '~'; // Fill each cell with '~' so it looks like the sea ~ ~ ~ water
             }
         }
     }
@@ -46,9 +46,9 @@ public class GameBoard {
         Scanner scanner = new Scanner(System.in); // scanner object to get user input
         
         for (int i = 1; i <= SHIPS;) { // for loop to place ships until i is equal to SHIPS
-            System.out.println("\nEnter coordinates to place ship " + i + " at (x, y):"); // Prompt player for coordinates
-            String inputString = scanner.nextLine(); // Read input from player
-            String[] splitCoordinates = inputString.split(","); // Split the input by comma
+            System.out.println("\nEnter coordinates to place ship " + i + " at (x, y):"); // Prompt player for coordinates, i is the ship number
+            String inputString = scanner.nextLine(); // Read input from player as string and store in inputString, e.g. "0,0"
+            String[] splitCoordinates = inputString.split(","); // Split the input by comma using a string array and split method to get x and y coordinates
             int x, y = 0; // Initialize x and y to 0
 
             try {
@@ -62,9 +62,6 @@ public class GameBoard {
             }
 
             // check if coordinates are within bounds and the position is not already taken
-            // if x is greater than or equal to 0 and less than BOARD_SIZE and y is greater
-            // than
-            // or equal to 0 and less than BOARD_SIZE and the position is not already taken
             // x and y are inverted because of the way the board is printed
             if (x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE && board[y][x] == '~') {
                 board[y][x] = '1'; // place the player's ship
@@ -79,7 +76,7 @@ public class GameBoard {
     public void placeComputerShips(char[][] board, char[][] playerBoard) {
         System.out.println("\nComputer is placing ships...");
         for (int i = 1; i <= SHIPS;) { // for loop to place ships until i is equal to SHIPS
-            int x = (int) (Math.random() * BOARD_SIZE); // random x coordinate
+            int x = (int) (Math.random() * BOARD_SIZE); // computer chooses random x coordinate
             int y = (int) (Math.random() * BOARD_SIZE); // random y coordinate
 
             // check if the position is not already taken

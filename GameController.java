@@ -17,15 +17,15 @@ public class GameController {
 
     private boolean gameOver = false; // Boolean to keep track of the game state
     private int turnsTaken = 0; // Number of turns taken in the game
-    private int playerShips = 5; // Max starting number of player's ships
-    private int computerShips = 5; // Max starting number of computer's ships
+    private int playerShips = 5; // Maximum starting number of player's ships
+    private int computerShips = 5; // Maximum starting number of computer's ships
 
-    private int playerScore = 0; // Score to keep track of player's hits
-    private int computerScore = 0; // Score to keep track of computer's hits
+    private int playerScore = 0; // Score to keep track of how many ships player sunk
+    private int computerScore = 0; // Score to keep track of how many ships computer sunk
 
-    private char playerHit = 'X'; // Character to represent a hit on player's board
-    private char computerHit = '!'; // Character to represent a hit on computer's board
-    private char miss = '-'; // Character to represent a miss on the board
+    private char playerHit = 'X'; // Char to represent a hit on player's board
+    private char computerHit = '!'; // Char to represent a hit on computer's board
+    private char miss = '-'; // Char to represent a miss on the board
 
     private enum Turn { // Enum to represent the current turn
         PLAYER, COMPUTER
@@ -66,9 +66,9 @@ public class GameController {
         System.out.println("\nYour board after ship placement:");
         playerBoard.printBoard(playerBoard.board);
 
-        // For debugging to see where computer ships are placed
-        System.out.println("\nComputer's board with ships hidden:");
-        computerBoard.printBoard(computerBoard.board); // must show 2s
+        // FOR DEBUGGING ONLY
+        // Print the computer's board with ships hidden
+        //computerBoard.printBoard(computerBoard.board); // must show 2s
 
         // run the game
         runGame();
@@ -78,36 +78,36 @@ public class GameController {
     // method to run the game
     private void runGame() {
         // while loop to keep the game running until the game is over
-        while (gameOver == false) {
-            if (playerShips == 0) {
+        while (gameOver == false) { // while loop to keep the game running until the game is over
+            if (playerShips == 0) { // Check if player has lost all their ships
                 System.out.println("\nYou've lost all your ships! Game over!");
-                gameOver = true;
+                gameOver = true; // Set game over condition to true
                 break;
-            } else if (computerShips == 0) {
+            } else if (computerShips == 0) { // Check if computer has lost all their ships
                 System.out.println("\nYou've sunk all the computer's ships! You win!");
-                gameOver = true;
+                gameOver = true; // Set game over condition to true
                 break;
             }
             // start the game turn mechanics
             gameTurn();
-            // Check if the game is over
+            // Check if the game is over, break the loop if true
             if (gameOver == true) {
                 break;
             }
         }
 
-        // Print the final scores and number of turns taken
+        // When game is over, print the final scores and number of turns taken
         playerScore = Math.max(0, playerScore); // Ensure player's score is not negative
         computerScore = Math.max(0, computerScore); // Ensure computer's score is not negative
         System.out.println("\nPlayer's score: " + playerScore + " | Computer's score: " + computerScore);
         System.out.println("\nTotal turns taken: " + turnsTaken);
         System.out.println("\nGame over!");
-        // Ask the player if they want to play again
+        // restart method called to ask the player if they want to play again
         restartGame();
 
     }
 
-    public void gameTurn() {
+    private void gameTurn() {
 
         // Player's turn
         if (currentTurn == Turn.PLAYER) {
@@ -118,7 +118,8 @@ public class GameController {
 
             try {
                 x = Integer.parseInt(splitCoordinates[1].trim()); // Trim to remove any leading or trailing spaces
-                y = Integer.parseInt(splitCoordinates[0].trim()); // to prevent NumberFormatException
+                y = Integer.parseInt(splitCoordinates[0].trim()); // to prevent NumberFormatException, x and y are inverted
+                                                                  // because of the way the board is printed
 
             } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) { // Catch exceptions for invalid input
                                                                                  // format, e.g. "a,b"
@@ -127,8 +128,8 @@ public class GameController {
             }
 
             // Check if the position is already taken
-            if (playerBoard.board[x][y] == playerHit || playerBoard.board[x][y] == computerHit) {
-                System.out.println("\nYou've already shot here. Take another shot somewhere else.");
+            if (playerBoard.board[x][y] == playerHit || playerBoard.board[x][y] == computerHit || playerBoard.board[x][y] == miss) {
+                System.out.println("\nThis position has already been shot. Take another shot somewhere else.");
                 return; // Exit the method
             }
 
@@ -151,6 +152,8 @@ public class GameController {
 
             System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left\n");
             playerBoard.printBoard(playerBoard.board); // Print the updated board
+            // FOR DEBUGGING ONLY
+            //computerBoard.printBoard(computerBoard.board); // Print the computer's board
             currentTurn = Turn.COMPUTER; // Switch to computer's turn
         }
 
@@ -158,7 +161,7 @@ public class GameController {
         if (currentTurn == Turn.COMPUTER) {
             int x, y;
             String coord;
-            do {
+            do { // do-while loop to keep generating random coordinates until a new one is found
                 x = random.nextInt(10); // computer chooses random x coordinate
                 y = random.nextInt(10); // computer chooses random y coordinate
                 coord = x + "," + y; // Create a string representation of the coordinates
@@ -166,8 +169,10 @@ public class GameController {
 
             chosenCoordinates.add(coord); // Add new coordinates to the set so they are not chosen again
 
-            // Check if the position is already taken
-            if (computerBoard.board[x][y] == playerHit || computerBoard.board[x][y] == computerHit) {
+            // Check if the position is already hit
+            if (computerBoard.board[x][y] == playerHit || computerBoard.board[x][y] == computerHit
+                    || computerBoard.board[x][y] == miss || playerBoard.board[x][y] == computerHit
+                    || playerBoard.board[x][y] == playerHit || playerBoard.board[x][y] == miss) {
                 return; // Exit the method
             }
 
@@ -192,6 +197,8 @@ public class GameController {
             }
             System.out.println("\n" + playerShips + " player ships left | " + computerShips + " computer ships left\n");
             playerBoard.printBoard(playerBoard.board); // Print the updated board
+            // FOR DEBUGGING ONLY
+            //computerBoard.printBoard(computerBoard.board); // Print the computer's board
             turnsTaken++; // Increment the number of turns taken
             System.out.println("Turn: " + turnsTaken + "\n");
             currentTurn = Turn.PLAYER; // Switch to player's turn
@@ -200,7 +207,7 @@ public class GameController {
 
     }
 
-    public void restartGame() {
+    private void restartGame() {
         System.out.println("\nDo you want to play again? (Type Yes or No)");
         String playAgain = scanner.nextLine();
         if (playAgain.equalsIgnoreCase("yes") || playAgain.equalsIgnoreCase("y")) {
