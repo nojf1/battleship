@@ -61,5 +61,10 @@ public class Main {
  * Added game restart function at game over
  * Added turn counter
  * 
+ * 17/5/2024
+ * Added comments to the Main class
+ * Added more comments to the GameController class
+ * Fixed some bugs
+ * Added loop for invalid input in placeShips method
  * 
  */
